@@ -5,6 +5,11 @@ package wangfei.bles;
  * 整个sdk的状态监听
  */
 public interface OnBleStateListener {
+
+    public int BLE_OK_DATA = 0;
+    public int BLE_NO_SERVICE = 1;
+    public int BLE_NO_Adapter = 2;
+    public int BLE_NO_Device = 3;
 //    void test(String s);
 
     /**

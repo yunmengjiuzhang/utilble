@@ -109,14 +109,14 @@ public class BaseBle extends BluetoothGattCallback {
         mAddress = address;
         close();
         if (mBtAdapter == null) {
-            return 201;
+            return OnBleStateListener.BLE_NO_Adapter;
         }
         final BluetoothDevice device = mBtAdapter.getRemoteDevice(mAddress);
         if (device == null) {
-            return 202;
+            return OnBleStateListener.BLE_NO_Device;
         }
         mBluetoothGatt = device.connectGatt(mCtx, false, this);//第一步:连接gatt:获取gatt管道
-        return 0;
+        return OnBleStateListener.BLE_OK_DATA;
     }
 
     public void close() {
@@ -280,7 +280,7 @@ public class BaseBle extends BluetoothGattCallback {
     public int connectByMac(String mac, byte[] cmd) {
         String addressFromMac = BleTool.getAddressFromMac(BleTool.macStr2Bytes(mac), mScans);
         if (addressFromMac == null) {
-            return 10;
+            return OnBleStateListener.BLE_NO_SERVICE;
         }
         cmdFirstConnet = cmd;
         return connect(addressFromMac);
