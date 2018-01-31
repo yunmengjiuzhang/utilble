@@ -7,7 +7,7 @@ import java.util.ArrayList;
  * 搜索到的ble列表改变监听
  */
 public interface OnScanListener {
-    void OnNewBleBean(BleBean bean);
+    void onNewBleBean(BleBean bean);
 
-    void OnBleBeanList(ArrayList<BleBean> mScans);
+    void onBleBeanList(ArrayList<BleBean> mScans);
 }

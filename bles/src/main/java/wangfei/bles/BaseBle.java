@@ -116,7 +116,7 @@ public class BaseBle extends BluetoothGattCallback {
             return OnStateListener.BLE_NO_Device;
         }
         mBluetoothGatt = device.connectGatt(mCtx, false, this);//第一步:连接gatt:获取gatt管道
-        return OnStateListener.BLE_OK_DATA;
+        return OnStateListener.BLE_OK_START;
     }
 
     public void close() {
@@ -154,13 +154,13 @@ public class BaseBle extends BluetoothGattCallback {
                 connect(mAddress);
         }
         if (mOnStateListener != null)
-            mOnStateListener.state(10000 + status + newState);
+            mOnStateListener.onStateChange(10000 + status + newState);
     }
 
     @Override
     public void onServicesDiscovered(BluetoothGatt gatt, int status) {
         if (mOnStateListener != null)
-            mOnStateListener.state(20000 + status);
+            mOnStateListener.onStateChange(20000 + status);
         if (status == 0) {//第三步:发现服务成功;获取服务,订阅特征值
             BluetoothGattService service = gatt.getService(UUID_SERVICE);
             mWriteChar = service.getCharacteristic(UUID_WRITE);
@@ -179,7 +179,7 @@ public class BaseBle extends BluetoothGattCallback {
     @Override
     public void onDescriptorWrite(BluetoothGatt gatt, BluetoothGattDescriptor descriptor, int status) {
         if (mOnStateListener != null)
-            mOnStateListener.state(30000 + status);
+            mOnStateListener.onStateChange(30000 + status);
         if (status == 0) {//第四步:订阅特征值成功;发送数据;交换随即密钥
             if (cmdFirstConnet != null)
                 writeChar(cmdFirstConnet);
@@ -191,7 +191,7 @@ public class BaseBle extends BluetoothGattCallback {
 
     public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
 //        if (mOnStateListener != null)
-//            mOnStateListener.state(30000 + status);
+//            mOnStateListener.onStateChange(30000 + status);
         if (status == 0) {//第六步:写入第一包数据后睡眠,发送第二包数据
             if (tempCmd2 != null) {
 //                try {
@@ -207,7 +207,7 @@ public class BaseBle extends BluetoothGattCallback {
     public void onCharacteristicChanged(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic) {
         Log.d("wangfeibles", "<---" + BleTool.bytes16ToString(characteristic.getValue()) + "===" + BleTool.bytes16ToHexStrings(characteristic.getValue()));
         if (mOnDatasListener != null)
-            mOnDatasListener.OnDatas(characteristic.getValue());
+            mOnDatasListener.onReceive(characteristic.getValue());
     }
 
     private BluetoothAdapter.LeScanCallback m18LeScanCallback = new BluetoothAdapter.LeScanCallback() {
@@ -222,8 +222,8 @@ public class BaseBle extends BluetoothGattCallback {
             if (!BleTool.containBytes(macTemp, mScans)) {//是否为扫描记录列表中的设备
                 mScans.add(bean);
                 if (mOnBleDevListListener != null) {
-                    mOnBleDevListListener.OnNewBleBean(bean);
-                    mOnBleDevListListener.OnBleBeanList(mScans);
+                    mOnBleDevListListener.onNewBleBean(bean);
+                    mOnBleDevListListener.onBleBeanList(mScans);
                 }
             }
         }

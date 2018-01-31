@@ -6,7 +6,7 @@ package wangfei.bles;
  */
 public interface OnStateListener {
 
-    public int BLE_OK_DATA = 0;
+    public int BLE_OK_START = 0;
     public int BLE_NO_SERVICE = 1;
     public int BLE_NO_Adapter = 2;
     public int BLE_NO_Device = 3;
@@ -15,5 +15,5 @@ public interface OnStateListener {
     /**
      * 0开头返回,表示通信完成,1开头表示通信前,数据检验时出错,2开头表示通信过程出错,
      */
-    void state(int step);
+    void onStateChange(int step);
 }
