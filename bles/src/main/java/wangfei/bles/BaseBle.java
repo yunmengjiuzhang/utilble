@@ -27,9 +27,9 @@ public class BaseBle extends BluetoothGattCallback {
     protected Application mCtx;
     protected BluetoothAdapter mBtAdapter;
     protected String mAddress;
-    public OnBleStateListener mOnStateListener;
-    public OnBleScanListener mOnBleDevListListener;
-    public OnBleReceiveDatasListener mOnDatasListener;//接受数据的监听
+    public OnStateListener mOnStateListener;
+    public OnScanListener mOnBleDevListListener;
+    public OnReceiveListener mOnDatasListener;//接受数据的监听
     protected byte[] tempCmd2 = null;
     protected BluetoothGattCharacteristic mWriteChar;
     protected BluetoothGatt mBluetoothGatt;
@@ -109,14 +109,14 @@ public class BaseBle extends BluetoothGattCallback {
         mAddress = address;
         close();
         if (mBtAdapter == null) {
-            return OnBleStateListener.BLE_NO_Adapter;
+            return OnStateListener.BLE_NO_Adapter;
         }
         final BluetoothDevice device = mBtAdapter.getRemoteDevice(mAddress);
         if (device == null) {
-            return OnBleStateListener.BLE_NO_Device;
+            return OnStateListener.BLE_NO_Device;
         }
         mBluetoothGatt = device.connectGatt(mCtx, false, this);//第一步:连接gatt:获取gatt管道
-        return OnBleStateListener.BLE_OK_DATA;
+        return OnStateListener.BLE_OK_DATA;
     }
 
     public void close() {
@@ -280,21 +280,21 @@ public class BaseBle extends BluetoothGattCallback {
     public int connectByMac(String mac, byte[] cmd) {
         String addressFromMac = BleTool.getAddressFromMac(BleTool.macStr2Bytes(mac), mScans);
         if (addressFromMac == null) {
-            return OnBleStateListener.BLE_NO_SERVICE;
+            return OnStateListener.BLE_NO_SERVICE;
         }
         cmdFirstConnet = cmd;
         return connect(addressFromMac);
     }
 
-    public void setOnBleListListener(OnBleScanListener asdaasd) {
+    public void setOnBleListListener(OnScanListener asdaasd) {
         mOnBleDevListListener = asdaasd;
     }
 
-    public void setOnStateListener(OnBleStateListener aaaa) {
+    public void setOnStateListener(OnStateListener aaaa) {
         mOnStateListener = aaaa;
     }
 
-    public void setOnDatasListener(OnBleReceiveDatasListener dddddd) {
+    public void setOnDatasListener(OnReceiveListener dddddd) {
         mOnDatasListener = dddddd;
     }
 

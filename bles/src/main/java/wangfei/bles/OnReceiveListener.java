@@ -1,5 +1,5 @@
 package wangfei.bles;
 
-public interface OnBleReceiveDatasListener {
+public interface OnReceiveListener {
     void OnDatas(byte[] result);
 }

@@ -4,7 +4,7 @@ package wangfei.bles;
  * Created by fei on 2017/1/11.
  * 整个sdk的状态监听
  */
-public interface OnBleStateListener {
+public interface OnStateListener {
 
     public int BLE_OK_DATA = 0;
     public int BLE_NO_SERVICE = 1;
