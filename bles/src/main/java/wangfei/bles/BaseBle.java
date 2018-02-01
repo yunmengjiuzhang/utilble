@@ -39,12 +39,12 @@ public class BaseBle extends BluetoothGattCallback {
     private ArrayList<BleBean> mScans = new ArrayList<BleBean>();//扫描ble结果
 
     /**
-     * @param ctx 上下文
+     * @param app 上下文
      */
-    public BaseBle(Application ctx) {
-        mCtx = ctx;
+    public BaseBle(Application app) {
+        mCtx = app;
         final BluetoothManager bluetoothManager = (BluetoothManager)
-                ctx.getSystemService(Context.BLUETOOTH_SERVICE);
+                app.getSystemService(Context.BLUETOOTH_SERVICE);
         mBtAdapter = bluetoothManager.getAdapter();
     }
 
