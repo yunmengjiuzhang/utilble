@@ -1,4 +1,4 @@
-package wangfei.bles;
+package wangfei.ble;
 
 import java.util.ArrayList;
 

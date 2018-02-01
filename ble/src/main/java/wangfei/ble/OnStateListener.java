@@ -1,4 +1,4 @@
-package wangfei.bles;
+package wangfei.ble;
 
 /**
  * Created by fei on 2017/1/11.

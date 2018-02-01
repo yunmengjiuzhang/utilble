@@ -1,4 +1,4 @@
-package wangfei.bles;
+package wangfei.ble;
 
 import android.app.Application;
 import android.bluetooth.BluetoothAdapter;
