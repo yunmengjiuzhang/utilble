@@ -217,7 +217,7 @@ public class BaseBle extends BluetoothGattCallback {
             if (mOnBleDevListListener == null)
                 return;
             byte[] macTemp = new byte[9];
-            parseRfDeviceScanRecord(bytes, macTemp);
+            BleTool.parseRfDeviceScanRecord(bytes, macTemp);
             BleBean bean = new BleBean(device.getName(), device.getAddress(), rssi, macTemp);
             if (!BleTool.containBytes(macTemp, mScans)) {//是否为扫描记录列表中的设备
                 mScans.add(bean);
@@ -229,38 +229,6 @@ public class BaseBle extends BluetoothGattCallback {
         }
     };
 
-    private boolean parseRfDeviceScanRecord(byte[] scanRecord, byte[] mac) {
-        boolean hasCorrectUuid = false;
-        if (scanRecord == null || scanRecord.length == 0)
-            return false;
-        int type;
-        for (int pckLen, len = 0; len < scanRecord.length; len += (pckLen + 1)) {
-            pckLen = scanRecord[len];
-            if (pckLen == 0) {
-                return hasCorrectUuid;
-            }
-            type = scanRecord[len + 1];
-            switch (type) {
-                case 0x03:
-                    if (pckLen >= 3) {
-                        for (int i = 2; i < pckLen; i += 2) {
-                            if ((scanRecord[len + i] == (byte) 0xE6 || scanRecord[len + i] == (byte) 0xEB)
-                                    && scanRecord[len + i + 1] == (byte) 0xFD) {
-                                hasCorrectUuid = true;
-                                break;
-                            }
-                        }
-                    }
-                    break;
-                case (byte) 0xFF:
-                    if (pckLen >= 11) {
-                        System.arraycopy(scanRecord, len + 4, mac, 0, 9);
-                    }
-                    break;
-            }
-        }
-        return hasCorrectUuid;
-    }
 
     //    private ScanCallback m21ScanCallback = new ScanCallback() {
 //        @Override

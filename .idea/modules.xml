@@ -3,7 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/ble/bles.iml" filepath="$PROJECT_DIR$/ble/bles.iml" />
+      <module fileurl="file://$PROJECT_DIR$/ble/ble.iml" filepath="$PROJECT_DIR$/ble/ble.iml" />
+      <module fileurl="file://C:\Users\xuany\Androidws\workspace\util\utilble\ble\bles.iml" filepath="C:\Users\xuany\Androidws\workspace\util\utilble\ble\bles.iml" />
       <module fileurl="file://$PROJECT_DIR$/utilble.iml" filepath="$PROJECT_DIR$/utilble.iml" />
     </modules>
   </component>
