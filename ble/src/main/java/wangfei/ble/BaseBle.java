@@ -232,7 +232,7 @@ public class BaseBle extends BluetoothGattCallback {
     /**
      * @param a 可以重写该方法，细化扫描接受结果
      */
-    public void setLeScanCallBack(BluetoothAdapter.LeScanCallback a) {
+    public void setLeScanCallback(BluetoothAdapter.LeScanCallback a) {
         m18LeScanCallback = a;
     }
 
