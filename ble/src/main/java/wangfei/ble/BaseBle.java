@@ -16,7 +16,7 @@ import android.util.Log;
 import java.util.ArrayList;
 import java.util.UUID;
 
-public class BaseBle extends BluetoothGattCallback {
+public class BaseBle extends BluetoothGattCallback implements BluetoothAdapter.LeScanCallback {
     protected UUID UUID_SERVICE;
     protected UUID UUID_WRITE;
     protected UUID UUID_NOTIFY;
@@ -68,17 +68,17 @@ public class BaseBle extends BluetoothGattCallback {
 
     public boolean scanStart() {
         mScans.clear();//清空扫描记录列表
-        return mBtAdapter != null && mBtAdapter.startLeScan(scanUUIDs, m18LeScanCallback);
+        return mBtAdapter != null && mBtAdapter.startLeScan(scanUUIDs, this);
     }
 
     public boolean scanStart(UUID[] scanUUIDs) {
         mScans.clear();//清空扫描记录列表
-        return mBtAdapter != null && mBtAdapter.startLeScan(scanUUIDs, m18LeScanCallback);
+        return mBtAdapter != null && mBtAdapter.startLeScan(scanUUIDs, this);
     }
 
     public void scanStop() {
         if (mBtAdapter != null)//华为:G7-Ul20;CHM-00;G7-TL00;蓝牙4.0,会出现空指针异常
-            mBtAdapter.stopLeScan(m18LeScanCallback);
+            mBtAdapter.stopLeScan(this);
     }
 
     public boolean isSending() {
@@ -210,31 +210,28 @@ public class BaseBle extends BluetoothGattCallback {
             mOnDatasListener.onReceive(characteristic.getValue());
     }
 
-    private BluetoothAdapter.LeScanCallback m18LeScanCallback = new BluetoothAdapter.LeScanCallback() {
-
-        @Override
-        public void onLeScan(BluetoothDevice device, int rssi, byte[] bytes) {
-            if (mOnBleDevListListener == null)
-                return;
-            byte[] macTemp = new byte[9];
-            BleTool.parseRfDeviceScanRecord(bytes, macTemp);
-            BleBean bean = new BleBean(device.getName(), device.getAddress(), rssi, macTemp);
-            if (!BleTool.containBytes(macTemp, mScans)) {//是否为扫描记录列表中的设备
-                mScans.add(bean);
-                if (mOnBleDevListListener != null) {
-                    mOnBleDevListListener.onNewBleBean(bean);
-                    mOnBleDevListListener.onBleBeanList(mScans);
-                }
+    @Override
+    public void onLeScan(BluetoothDevice device, int rssi, byte[] scanRecord) {
+        if (mOnBleDevListListener == null)
+            return;
+        byte[] macTemp = new byte[9];
+        BleTool.parseRfDeviceScanRecord(scanRecord, macTemp);
+        BleBean bean = new BleBean(device.getName(), device.getAddress(), rssi, macTemp);
+        if (!BleTool.containBytes(macTemp, mScans)) {//是否为扫描记录列表中的设备
+            mScans.add(bean);
+            if (mOnBleDevListListener != null) {
+                mOnBleDevListListener.onNewBleBean(bean);
+                mOnBleDevListListener.onBleBeanList(mScans);
             }
         }
-    };
-
-    /**
-     * @param a 可以重写该方法，细化扫描接受结果
-     */
-    public void setLeScanCallback(BluetoothAdapter.LeScanCallback a) {
-        m18LeScanCallback = a;
     }
+
+//    /**
+//     * @param a 可以重写该方法，细化扫描接受结果
+//     */
+//    public void setLeScanCallback(BluetoothAdapter.LeScanCallback a) {
+//        m18LeScanCallback = a;
+//    }
 
     //    private ScanCallback m21ScanCallback = new ScanCallback() {
 //        @Override
@@ -275,4 +272,6 @@ public class BaseBle extends BluetoothGattCallback {
     public BluetoothAdapter getAdapter() {
         return mBtAdapter;
     }
+
+
 }
