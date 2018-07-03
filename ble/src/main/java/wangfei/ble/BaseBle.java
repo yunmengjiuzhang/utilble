@@ -13,6 +13,7 @@ import android.bluetooth.BluetoothProfile;
 import android.content.Context;
 import android.util.Log;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.UUID;
 
@@ -274,4 +275,16 @@ public class BaseBle extends BluetoothGattCallback implements BluetoothAdapter.L
     }
 
 
+    public boolean refreshDeviceCache() {
+        if (mBluetoothGatt != null) {
+            try {
+                Method localMethod = mBluetoothGatt.getClass().getMethod("refresh", null);
+                if (localMethod != null)
+                    return (boolean) localMethod.invoke(mBluetoothGatt, null);
+            } catch (Exception localException) {
+                Log.i("wangfeibles", "An exception occured while refreshing device");
+            }
+        }
+        return false;
+    }
 }
