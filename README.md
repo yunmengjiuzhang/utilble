@@ -7,7 +7,6 @@ https://blog.csdn.net/qq_36017059/article/details/80893516
 
 
 配置： 1.根build.gradle添加
-
             allprojects {
                 repositories {
                     google()
