@@ -86,6 +86,12 @@ public class BaseBle extends BluetoothGattCallback implements BluetoothAdapter.L
         return tempCmd2 != null;
     }
 
+    /**
+     * 写入数据，可根据长度分包
+     *
+     * @param tempDatas 写入的数据
+     * @return 返回是否写入成功
+     */
     public synchronized boolean writeChar(byte[] tempDatas) {
         if (mWriteChar == null || mBluetoothGatt == null || tempDatas == null)
             return false;
@@ -106,8 +112,15 @@ public class BaseBle extends BluetoothGattCallback implements BluetoothAdapter.L
         return mWriteChar.setValue(bytes) && mBluetoothGatt.writeCharacteristic(mWriteChar);
     }
 
+    /**
+     * 根据mac地址连接
+     *
+     * @param address mac 地址
+     * @return 返回是否连接成功
+     */
     public int connect(String address) {
         mAddress = address;
+        refreshDeviceCache();
         close();
         if (mBtAdapter == null) {
             return OnStateListener.BLE_NO_Adapter;
@@ -120,6 +133,9 @@ public class BaseBle extends BluetoothGattCallback implements BluetoothAdapter.L
         return OnStateListener.BLE_OK_START;
     }
 
+    /**
+     * 关闭ble
+     */
     public void close() {
         if (mBluetoothGatt != null) {
             mBluetoothGatt.disconnect();
@@ -190,6 +206,7 @@ public class BaseBle extends BluetoothGattCallback implements BluetoothAdapter.L
         }
     }
 
+    @Override
     public void onCharacteristicWrite(BluetoothGatt gatt, BluetoothGattCharacteristic characteristic, int status) {
 //        if (mOnStateListener != null)
 //            mOnStateListener.onStateChange(30000 + status);
@@ -244,11 +261,25 @@ public class BaseBle extends BluetoothGattCallback implements BluetoothAdapter.L
 //        }
 //    };
 
+    /**
+     * 连接：适合短连接
+     *
+     * @param address mac地址
+     * @param cmd     命令
+     * @return 成功与否
+     */
     public int connect(String address, byte[] cmd) {
         cmdFirstConnet = cmd;
         return connect(address);
     }
 
+    /**
+     * 连接：适合短连接，
+     *
+     * @param mac 自定义mac
+     * @param cmd 命令
+     * @return 成功与否
+     */
     public int connectByMac(String mac, byte[] cmd) {
         String addressFromMac = BleTool.getAddressFromMac(BleTool.macStr2Bytes(mac), mScans);
         if (addressFromMac == null) {
@@ -275,6 +306,11 @@ public class BaseBle extends BluetoothGattCallback implements BluetoothAdapter.L
     }
 
 
+    /**
+     * 刷新手机端配置参数
+     *
+     * @return 成功与否
+     */
     public boolean refreshDeviceCache() {
         if (mBluetoothGatt != null) {
             try {
